@@ -15,7 +15,7 @@ public class Citizen
         Kingdom = kingdom;
     }
 
-    public void TimePasses()
+    public virtual void Tick()
     {
         Age++;
     }
