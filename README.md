@@ -1,6 +1,7 @@
 # Medieval civilization simulator
 
 - multiple kingdoms
+  - small scale kingdoms for ease of management
 - multiple types of citizen
 - text based multiple choice gameplay
   - turn based (yearly) strategy
@@ -10,7 +11,7 @@
 - manage your own
   - taxes
   - food
-  - happyness
+  - happiness
   - economy
   - riots
 - inter-kingdom trading
