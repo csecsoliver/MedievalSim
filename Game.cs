@@ -2,54 +2,49 @@ namespace MedievalSim;
 
 public class Game
 {
-    public string SaveName { get; }
-    public List<Kingdom> Kingdoms { get; }
+    // public string SaveName { get; }
+    public List<Kingdom> Kingdoms { get; protected set; }
 
-    public Game(string text)
+    public Game(int seed, string kingdomName, string kingName)
     {
+        Random random = new Random(seed);
+        // ReSharper disable once UseCollectionExpression
+        Kingdoms = new List<Kingdom>();
+        Kingdoms.Add(GenerateKingdom(random, kingdomName, kingName));
+        
+        
     }
 
-    public string ToText()
+    public Kingdom GenerateKingdom(Random random, string kingdomName, string kingName)
     {
-        string output = "";
-        output += $"{SaveName}\n";
-        foreach (Kingdom kingdom in Kingdoms)
+        if (kingdomName == "")
         {
-            output += "#kingdomStart\n";
-            output += $"{kingdom.Name}\n";
-            output += $"{kingdom.Wealth}\n";
-            output += $"{kingdom.King.Name}\n";
-            output += $"{kingdom.King.Wealth}\n";
-            output += $"{kingdom.King.Age}\n";
-            output += $"{kingdom.Citizens.Count}\n";
-            foreach (Citizen citizen in kingdom.Citizens)
-            {
-                output += "#citizenStart";
-                output += $"{citizen.Name}\n";
-                output += $"{citizen.Wealth}\n";
-                output += $"{citizen.Age}\n";
-                output += "#citizenEnd";
-            }
-
-            output += $"{kingdom.Castles.Count}\n";
-            foreach (Castle castle in kingdom.Castles)
-            {
-                output += "#castleStart\n";
-                output += $"{castle.Name}\n";
-                output += $"{castle.Army.Count}\n";
-                foreach (Soldier citizen in castle.Army)
-                {
-                    output += "soldierStart\n";
-                    output += $"{citizen.Name}\n";
-                    output += $"{citizen.Wealth}\n";
-                    output += $"{citizen.Age}\n";
-                    output += "soldierEnd\n";
-                }
-            }
-
-            output += "#kingdomEnd\n";
+            kingdomName = RData.KingdomNames[random.Next(50)];
+            
         }
-
-        return output;
+        if (kingName == "")
+        {
+            kingName = RData.KingNames[random.Next(100)];
+        }
+        int[] citizenCount = [random.Next(7,20), random.Next(7,20), random.Next(7,20)]; // első a paraszt, második a kovács, harmadik a katona
+        Kingdom kingdom = new Kingdom(kingdomName);
+        kingdom.AssignKing(new King(kingName, 1000, random.Next(30,70), kingdom));
+        
+        for (int i = 0; i < citizenCount[0]; i++)
+        {
+            kingdom.CreateCitizen(false, 1);
+        }
+        for (int i = 0; i < citizenCount[1]; i++)
+        {
+            kingdom.CreateCitizen(false, 2);
+            
+        }
+        for (int i = 0; i < citizenCount[2]; i++)
+        {
+            kingdom.CreateCitizen(false, 3);
+        }
+        
+        return kingdom;
     }
+    
 }
