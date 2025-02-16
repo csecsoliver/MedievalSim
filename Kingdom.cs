@@ -5,9 +5,58 @@ public class Kingdom
     public string Name { get; protected set; }
     public double Wealth { get; protected set; }
     public List<Citizen> Citizens { get; protected set; }
+    
+    public double WealthTax { get; set; }
+    private double _wellbeing;
+    public double Wellbeing
+    {
+        get
+        {
+            return _wellbeing;
+        }
+        set
+        {
+            if (value < 0 )
+            {
+                _wellbeing = 0;
+            } else if (value > 1)
+            {
+                _wellbeing = 1;
+            }
+            _wellbeing = value;
+        }
+    }
+    public double WellbeingSpend { get; set; }
+    // public double _armyState;
+    //
+    // public double ArmyState
+    // {
+    //     get
+    //     {
+    //         return _armyState;
+    //     }
+    //     set
+    //     {
+    //         if (value < 0 )
+    //         {
+    //             _wellbeing = 0;
+    //         } else if (value > 1)
+    //         {
+    //             _wellbeing = 1;
+    //         }
+    //         _wellbeing = value;
+    //     }
+    // }
+    
+    
 
     // public List<Castle> Castles { get; protected set; }
-    public King King { get; protected set; }
+    
+    /// <summary>
+    /// A slightly flawed implementation of this property,
+    /// because the Kingdom needs to exist to be able to create a King (which inherits Citizen) for it.
+    /// </summary>
+    public King King { get; set; }
     
     public Guid Identifier { get; }
 
@@ -19,21 +68,16 @@ public class Kingdom
         Identifier = Guid.NewGuid();
     }
 
-    public void AssignKing(King king)
-    {
-        King = king;
-    }
-
     /// <summary>
     /// This method creates a randomly generated Citizen of a given profession.
     /// </summary>
+    /// <param name="random">A Random class to be able to use a global seed.</param>
     /// <param name="born">Did the citizen newly come to life, or is it already an adult.</param>
     /// <param name="profession">{1=Peasant, 2=Blacksmith, 3=Soldier} any other input will result in an exception</param>
-    public void CreateCitizen(bool born, int profession)
+    public void CreateCitizen(Random random, bool born, int profession)
     {
         int age;
         double wealth;
-        Random random = new Random();
         if (born)
         {
             age = 0;
@@ -45,21 +89,13 @@ public class Kingdom
             wealth = random.Next(50,300);
         }
 
-        Citizen x;
-        switch (profession)
+        Citizen x = profession switch
         {
-            case 1:
-                x = new Peasant(RData.Names[random.Next(20)], wealth, age,this);
-                break;
-            case 2:
-                x = new Blacksmith(RData.Names[random.Next(20)], wealth, age,this);
-                break;
-            case 3:
-                x = new Soldier(RData.Names[random.Next(20)], wealth, age,this);
-                break;
-            default:
-                throw new ArgumentException("Invalid profession");
-        }
+            1 => new Peasant(RData.Names[random.Next(20)], wealth, age, this),
+            2 => new Blacksmith(RData.Names[random.Next(20)], wealth, age, this),
+            3 => new Soldier(RData.Names[random.Next(20)], wealth, age, this),
+            _ => throw new ArgumentException("Invalid profession")
+        };
         Citizens.Add(x);
         
     }

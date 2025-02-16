@@ -3,7 +3,7 @@ namespace MedievalSim;
 public static class RData
 {
     public static readonly string[] KingNames =
-    {
+    [
         "Arthur", "Henry", "Edward", "Richard", "Louis", "George", "James", "Philip", "William", "Frederick",
         "Charles", "Robert", "Alexander", "John", "David", "Oscar", "Cyrus", "Solomon", "Otto", "Sigismund",
         "Clovis", "Harold", "Julius", "Constantine", "Theodore", "Balthazar", "Elias", "Gustav", "Afonso",
@@ -15,9 +15,9 @@ public static class RData
         "Rhys", "Griffith", "Wenceslaus", "Vladislav", "Ladislaus", "Geza", "Bela", "Stephen", "Mindaugas",
         "Vytautas", "Gediminas", "Algirdas", "Basil", "Alexios", "Manuel", "Andronikos", "Romanos", "Nikephoros",
         "Zeno", "Arcadius", "Theodosius", "Justinian"
-    };
+    ];
     public static readonly string[] Names =
-    {
+    [
         "Alaric", "Aldric", "Aldwin", "Amedeo", "Anselm", "Arnold", "Aubert", "Aymar", "Baldwin", "Bartholomew",
         "Berengar", "Bertrand", "Benoit", "Bernard", "Blanche", "Bonaventure", "Boris", "Bonaventura", "Calixtus", "Catherine",
         "Charles", "Chretien", "Claudia", "Conrad", "Cyprian", "Damien", "Dante", "David", "Denis", "Desiderius",
@@ -45,15 +45,15 @@ public static class RData
         "Basil", "Beatrice", "Beatrix", "Bertha", "Benedicta", "Berthold", "Bridget", "Celia", "Clara", "Edmund",
         "Elena", "Eustace", "Frederica", "Gerard", "Gilbert", "Gwyneth", "Hannah", "Hugo", "Isabella", "Jasper",
         "Josephine", "Julian", "Katharina", "Lysbeth", "Maurice", "Melisandra", "Matilda", "Peter", "Ralph", "Rupert"
-    };
+    ];
     public static readonly string[] KingdomNames =
-    {
+    [
         "Avalon", "Camelot", "Rohan", "Gondor", "Westeros", "Asgard", "Valyria", "Narnia", "Hogwarts", "Elbonia",
         "Lothlórien", "Mordor", "Albion", "Fiefdom", "Atlantis", "Zakhara", "Jotunheim", "Shire", "Midgard", "Eldoria",
         "Arendelle", "Erendorn", "Rivendell", "Dorne", "Kalmar", "Vikingar", "Scandia", "Brittania", "Vernor", "Baronia",
         "Thaloria", "Khazad-dûm", "Belkora", "Angmar", "Axelberg", "Normandy", "Pyrene", "Ithil", "Sarovia", "Eryndor",
         "Tirith", "Soria", "Alcarin", "Isla de la Luna", "Nordheim", "Tauriel", "Erithria", "Desmarche", "Valkyria",
         "Sarnath", "Ostmark", "Lunaris", "Altair", "Eriador", "Elandor"
-    };
+    ];
     
 }
