@@ -93,10 +93,11 @@ public class Game
                     Taxes();
                     break;
                 case 3:
-                    // Population();
+                    Population();
                     break;
             }
         }
+        // todo: make time pass
     }
 
     public void Stats()
@@ -104,11 +105,13 @@ public class Game
         Console.Clear();
         Console.WriteLine("Your Kingdom's stats:");
         Console.WriteLine($"Kingdom Name: {Kingdoms[0].Name}");
-        Console.WriteLine($"Kindom's wealth: {Kingdoms[0].Wealth}");
+        Console.WriteLine($"Kingdom's wealth: {Kingdoms[0].Wealth}");
         Console.WriteLine($"King Name: {Kingdoms[0].King.Name}");
         Console.WriteLine($"King's wealth: {Kingdoms[0].King.Wealth}");
         Console.WriteLine($"King's age: {Kingdoms[0].King.Age}");
         Console.WriteLine($"Number of citizen: {Kingdoms[0].Citizens.Count}");
+        Console.WriteLine($"Priority profession: {Kingdoms[0].Wellbeing}");
+        
         Console.Write("Press any key to return...");
         Console.ReadKey();
     }
@@ -116,7 +119,7 @@ public class Game
     public void Taxes()
     {
         Console.Clear();
-        List<string> taxesmenu = ["Change", "Wellbeing", "Army"];
+        List<string> taxesmenu = ["Change taxes", "Wellbeing", "Army"];
         double avgW = 0;
         foreach (Citizen k in Kingdoms[0].Citizens)
         {
@@ -124,13 +127,13 @@ public class Game
         }
 
         avgW /= Kingdoms[0].Citizens.Count;
-        string prompt = $"Current taxes: {Kingdoms[0].WealthTax * 100}% and {Kingdoms[0].Wealth} gold in storage.\n" +
-                        $"Citizen wellbeing/happiness: {Kingdoms[0].Wellbeing}\n" +
-                        $"Average citizen wealth: {avgW} gold\n" +
-                        $"Wellbeing spend: {Kingdoms[0].WellbeingSpend} gold";
         bool cont = false;
         while (!cont)
         {
+            string prompt = $"Current taxes: {Kingdoms[0].WealthTax * 100}% and {Kingdoms[0].Wealth} gold in storage.\n" +
+                                    $"Citizen wellbeing/happiness: {Kingdoms[0].Wellbeing}\n" +
+                                    $"Average citizen wealth: {avgW} gold\n" +
+                                    $"Wellbeing spend: {Kingdoms[0].WellbeingSpend} gold";
             int taxeschoice = Misc.Menu(taxesmenu, "Manage taxes", prompt);
             switch (taxeschoice)
             {
@@ -154,7 +157,7 @@ public class Game
     {
         Console.Clear();
         Console.WriteLine("What do you want to change the wealth tax to? Input a percentage as a number.");
-        Kingdoms[0].WealthTax = Misc.IntInput(": ") * 0.01;
+        Kingdoms[0].WealthTax = Misc.IntInput("") * 0.01;
         if (Kingdoms[0].WealthTax < 0)
         {
             Console.WriteLine("Well, now you're giving out money (happiness soars)");
@@ -173,21 +176,21 @@ public class Game
         Console.WriteLine(
             "What do you want to change the wellbeing spend to? Input a positive gold amount as a number (negative is zero).");
         double pastSpend = Kingdoms[0].WellbeingSpend;
-        double input = Misc.IntInput(": ");
+        double input = Misc.IntInput("");
         if (input < 0)
         {
             input = 0;
         }
 
         Kingdoms[0].WellbeingSpend = input;
-        Kingdoms[0].Wellbeing *= Kingdoms[0].WellbeingSpend / (pastSpend + 1) + _random.Next(-20, 20) * 0.01;
+        Kingdoms[0].Wellbeing= Kingdoms[0].Wellbeing * Kingdoms[0].WellbeingSpend / (pastSpend + 1) + _random.Next(-10, 10) * 0.01;
     }
 
     public void ArmyState()
     {
         Console.Clear();
         Console.WriteLine("How many soldiers do you want to train? (negative means decommission)");
-        double train = Misc.IntInput(": ");
+        double train = Misc.IntInput("");
         double cost = 0;
         if (train < 0)
         {
@@ -195,9 +198,8 @@ public class Game
             {
                 if (Kingdoms[0].Citizens[i].GetType() == typeof(Soldier) && train < 0)
                 {
-                    // TODO: blacksmith too
                     train++;
-                    cost += 100;
+                    
                     Kingdoms[0].Citizens[i] = new Peasant(Kingdoms[0].Citizens[i].Name, Kingdoms[0].Citizens[i].Wealth,
                         Kingdoms[0].Citizens[i].Age, Kingdoms[0].Citizens[i].Kingdom,
                         Kingdoms[0].Citizens[i].Identifier);
@@ -211,6 +213,7 @@ public class Game
                 if (Kingdoms[0].Citizens[i].GetType() == typeof(Peasant) && train > 0)
                 {
                     train--;
+                    cost += 100;
                     Kingdoms[0].Citizens[i] = new Soldier(Kingdoms[0].Citizens[i].Name, Kingdoms[0].Citizens[i].Wealth,
                         Kingdoms[0].Citizens[i].Age, Kingdoms[0].Citizens[i].Kingdom,
                         Kingdoms[0].Citizens[i].Identifier);
@@ -228,6 +231,102 @@ public class Game
         if (train < 0)
         {
             Console.WriteLine($"Weren't able to decommission {-train} soldiers, ran out of Soldiers.");
+        }
+    }
+    
+    public void Population()
+    {
+        Console.Clear();
+        List<string> popmenu = ["Invest in blacksmithing", "Invest in farming"];
+
+        int peasantNum = 0;
+        int soldierNum = 0;
+        int blacksmithNum = 0;
+        
+        
+        foreach (Citizen k in Kingdoms[0].Citizens)
+        {
+            if (k.GetType() == typeof(Blacksmith))
+            {
+                blacksmithNum++;
+            } else if (k.GetType() == typeof(Soldier))
+            {
+                soldierNum++;
+            } else if (k.GetType() == typeof(Peasant))
+            {
+                peasantNum++;
+            }
+        }
+        
+        bool cont = false;
+        while (!cont)
+        {
+            string prompt = $"Blacksmiths: {blacksmithNum}\nSoldiers: {soldierNum}\nPeasants: {peasantNum}";
+            int popchoice = Misc.Menu(popmenu, "Population", prompt);
+            switch (popchoice)
+            {
+                case 0:
+                    cont = true;
+                    break;
+                case 1:
+                    TrainBlacksmith();
+                    break;
+                case 2:
+                    TrainPeasant();
+                    break;
+            }
+        }
+    }
+    
+    public void TrainBlacksmith()
+    {
+        Console.Clear();
+        Console.WriteLine("How many peasants do you want to make blacksmiths? (negative means zero)");
+        double train = Misc.IntInput("");
+        if (train < 0) train = 0;
+        double cost = 0;
+        for (int i = 0; i < Kingdoms[0].Citizens.Count; i++)
+        {
+            if (Kingdoms[0].Citizens[i].GetType() == typeof(Peasant) && train > 0)
+            {
+                train--;
+                cost += 100;
+                Kingdoms[0].Citizens[i] = new Blacksmith(Kingdoms[0].Citizens[i].Name, Kingdoms[0].Citizens[i].Wealth,
+                    Kingdoms[0].Citizens[i].Age, Kingdoms[0].Citizens[i].Kingdom,
+                    Kingdoms[0].Citizens[i].Identifier);
+            }
+        }
+
+        Console.WriteLine($"It cost {cost} gold to motivate career change.");
+        if (train > 0)
+        {
+            Console.WriteLine($"Weren't able to motivate {train} blacksmiths, ran out of peasants.");
+        }
+    }
+    
+    public void TrainPeasant()
+    {
+        Console.Clear();
+        Console.WriteLine("How many blacksmiths do you want to make peasants? (negative means zero)");
+        double train = Misc.IntInput("");
+        if (train < 0) train = 0;
+        double cost = 0;
+        for (int i = 0; i < Kingdoms[0].Citizens.Count; i++)
+        {
+            if (Kingdoms[0].Citizens[i].GetType() == typeof(Blacksmith) && train > 0)
+            {
+                train--;
+                cost += 100;
+                Kingdoms[0].Citizens[i] = new Peasant(Kingdoms[0].Citizens[i].Name, Kingdoms[0].Citizens[i].Wealth,
+                    Kingdoms[0].Citizens[i].Age, Kingdoms[0].Citizens[i].Kingdom,
+                    Kingdoms[0].Citizens[i].Identifier);
+            }
+        }
+
+        Console.WriteLine($"It cost {cost} gold to motivate career change.");
+        if (train > 0)
+        {
+            Console.WriteLine($"Weren't able to motivate {train} peasants, ran out of blacksmiths.");
         }
     }
 }

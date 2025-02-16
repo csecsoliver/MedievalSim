@@ -41,9 +41,6 @@ class Program
                     thegame.GameLoop();
                 }
                 
-                
-                
-                
                 break;
             case '2':
                 Console.WriteLine("Exiting...");

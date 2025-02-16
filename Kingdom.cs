@@ -10,10 +10,7 @@ public class Kingdom
     private double _wellbeing;
     public double Wellbeing
     {
-        get
-        {
-            return _wellbeing;
-        }
+        get => _wellbeing;
         set
         {
             if (value < 0 )
@@ -66,6 +63,9 @@ public class Kingdom
         Wealth = 1000;
         Citizens = new List<Citizen>();
         Identifier = Guid.NewGuid();
+        _wellbeing = 1;
+        WellbeingSpend = 100;
+        WealthTax = 0;
     }
 
     /// <summary>
