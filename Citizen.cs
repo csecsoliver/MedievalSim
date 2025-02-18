@@ -30,8 +30,39 @@ public class Citizen
         Identifier = identifier;
     }
 
-    public virtual void Tick()
+    public virtual void Tick(Random rand)
     {
         Age++;
+        if (Age > 40)
+        {
+            if (rand.NextDouble() < 0.5)
+            {
+                Die();
+                return;
+            }
+        } else if (Age >= 80)
+        {
+            Die();
+            return;
+        }
+        Wealth += rand.Next(-20, 100);
+        Kingdom.Wealth += Kingdom.WealthTax * Wealth;
+        Wealth -= Kingdom.WealthTax * Wealth;
+        
+        
+        
+        
+    }
+
+    public void Die()
+    {
+        for (int i = 0; i < Kingdom.Citizens.Count; i++)
+        {
+            if (Kingdom.Citizens[i].Identifier == Identifier)
+            {
+                Kingdom.Citizens.RemoveAt(i);
+                return;
+            }
+        }
     }
 }

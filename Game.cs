@@ -74,7 +74,23 @@ public class Game
 
     public void GameLoop()
     {
+        
+        
         Console.Clear();
+
+
+
+        Year++;
+        foreach (Kingdom k in Kingdoms)
+        {
+            foreach (var c in k.Citizens)
+            {
+                c.Tick(_random);
+            }
+        }
+
+
+
         List<string> mainmenu = ["Stats", "Taxes", "Population", "Relations"];
         string prompt = $"A year has passed. Current year: {Year}";
         bool cont = false;
@@ -94,6 +110,9 @@ public class Game
                     break;
                 case 3:
                     Population();
+                    break;
+                case 4:
+                    Relations();
                     break;
             }
         }
@@ -222,7 +241,7 @@ public class Game
 
             Console.WriteLine($"It cost {cost} gold to train these soldiers.");
         }
-
+        
         if (train > 0)
         {
             Console.WriteLine($"Weren't able to train {train} soldiers, ran out of Peasants to train.");
@@ -232,6 +251,7 @@ public class Game
         {
             Console.WriteLine($"Weren't able to decommission {-train} soldiers, ran out of Soldiers.");
         }
+        Kingdoms[0].Wealth -= cost;
     }
     
     public void Population()
@@ -328,5 +348,11 @@ public class Game
         {
             Console.WriteLine($"Weren't able to motivate {train} peasants, ran out of blacksmiths.");
         }
+    }
+
+    public void Relations()
+    {
+        Console.Clear();
+        
     }
 }

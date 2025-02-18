@@ -2,8 +2,8 @@ namespace MedievalSim;
 
 public class Kingdom
 {
-    public string Name { get; protected set; }
-    public double Wealth { get; protected set; }
+    public string Name { get; }
+    public double Wealth { get; set; }
     public List<Citizen> Citizens { get; protected set; }
     
     public double WealthTax { get; set; }
