@@ -5,7 +5,6 @@
 - Multiple types of citizen
 - Text based multiple choice gameplay
   - Turn based (yearly) strategy
-- LLM powered interactions
 - Randomly generated kingdoms in the area
 - Take over them all
 - Manage your own

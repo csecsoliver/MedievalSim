@@ -5,24 +5,27 @@ public class Kingdom
     public string Name { get; }
     public double Wealth { get; set; }
     public List<Citizen> Citizens { get; protected set; }
-    
     public double WealthTax { get; set; }
     private double _wellbeing;
+
     public double Wellbeing
     {
         get => _wellbeing;
         set
         {
-            if (value < 0 )
+            if (value < 0)
             {
                 _wellbeing = 0;
-            } else if (value > 1)
+            }
+            else if (value > 1)
             {
                 _wellbeing = 1;
             }
+
             _wellbeing = value;
         }
     }
+
     public double WellbeingSpend { get; set; }
     // public double _armyState;
     //
@@ -44,17 +47,15 @@ public class Kingdom
     //         _wellbeing = value;
     //     }
     // }
-    
-    
 
     // public List<Castle> Castles { get; protected set; }
-    
+
     /// <summary>
     /// A slightly flawed implementation of this property,
     /// because the Kingdom needs to exist to be able to create a King (which inherits Citizen) for it.
     /// </summary>
     public King King { get; set; }
-    
+
     public Guid Identifier { get; }
 
     public Kingdom(string name)
@@ -86,7 +87,7 @@ public class Kingdom
         else
         {
             age = random.Next(20, 60);
-            wealth = random.Next(50,300);
+            wealth = random.Next(50, 300);
         }
 
         Citizen x = profession switch
@@ -97,6 +98,37 @@ public class Kingdom
             _ => throw new ArgumentException("Invalid profession")
         };
         Citizens.Add(x);
+    }
+
+    public void Tick(Random rand)
+    {
+        List<Citizen> citizens = new List<Citizen>();
+        citizens.Clear();
+        citizens.AddRange(Citizens);
+        foreach (var c in citizens)
+        {
+            c.Tick(rand);
+            if (rand.NextDouble() < 0.1)
+            {
+                CreateCitizen(rand, true, rand.Next(1, 4));
+            }
+        }
         
+        
+
+        
+        SpendWellbeing();
+    }
+
+    public void SpendWellbeing()
+    {
+        Wealth -= WellbeingSpend;
+    }
+
+    public void RandomTick(Random rand)
+    {
+        Wellbeing = rand.NextDouble();
+        WealthTax = rand.NextDouble();
+        WellbeingSpend = rand.Next(50, 200);
     }
 }

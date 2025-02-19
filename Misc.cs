@@ -56,4 +56,17 @@ public static class Misc
             }
         }
     }
+
+    public static void Wait(int timeout)
+    {
+        if (Console.KeyAvailable)  
+        {  
+            Console.ReadKey(true);  
+            
+        }
+        else
+        {
+            Thread.Sleep(timeout);
+        }
+    }
 }

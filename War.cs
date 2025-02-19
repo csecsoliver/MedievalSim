@@ -28,7 +28,7 @@ public class War
             {
                 score1 += 1 - ((c.Age - 20.0)/60.0)*0.2;
                 score1 += rand.NextDouble()-0.5;
-                if (rand.NextDouble() > 0.55)
+                if (rand.NextDouble() > 0.60)
                 {
                     c.Die();
                 }
@@ -45,14 +45,22 @@ public class War
         {
             if (c.GetType() == typeof(Soldier))
             {
+                if (c.Age<20)
+                {
+                    continue;
+                }
                 score2 += 1 - ((c.Age - 20.0)/60.0)*0.2;
                 score2 += rand.NextDouble()-0.5;
-                if (rand.NextDouble() > 0.55)
+                if (rand.NextDouble() > 0.60)
                 {
                     c.Die();
                 }
             } else if (c.GetType() == typeof(Blacksmith))
             {
+                if (c.Age<20)
+                {
+                    continue;
+                }
                 score2 += 0.5 - ((c.Age - 20.0) / 60.0) * 0.15;
                 
             }
