@@ -3,7 +3,26 @@ namespace MedievalSim;
 public class Kingdom
 {
     public string Name { get; }
-    public double Wealth { get; set; }
+
+    private double _wealth;
+    public double Wealth
+    {
+        get => _wealth;
+        set
+        {
+            if (value <= 0)
+            {
+                _wealth = 0;
+                Console.WriteLine("You lost the kingdom. Exiting...");
+                Environment.Exit(0);
+            }
+            else
+            {
+                _wealth = value;
+            }
+            
+        }
+    }
     public List<Citizen> Citizens { get; protected set; }
     public double WealthTax { get; set; }
     private double _wellbeing;
@@ -13,16 +32,19 @@ public class Kingdom
         get => _wellbeing;
         set
         {
-            if (value < 0)
+            switch (value)
             {
-                _wellbeing = 0;
-            }
-            else if (value > 1)
-            {
-                _wellbeing = 1;
-            }
-
-            _wellbeing = value;
+                case < 0.1:
+                    _wellbeing = 0.1;
+                    break;
+                case > 1:
+                    _wellbeing = 1;
+                    break;
+                default:
+                    _wellbeing = value;
+                    break;
+            } 
+            
         }
     }
 
@@ -92,9 +114,9 @@ public class Kingdom
 
         Citizen x = profession switch
         {
-            1 => new Peasant(RData.Names[random.Next(20)], wealth, age, this),
-            2 => new Blacksmith(RData.Names[random.Next(20)], wealth, age, this),
-            3 => new Soldier(RData.Names[random.Next(20)], wealth, age, this),
+            1 => new Peasant(RData.Names[random.Next(200)], wealth, age, this),
+            2 => new Blacksmith(RData.Names[random.Next(200)], wealth, age, this),
+            3 => new Soldier(RData.Names[random.Next(200)], wealth, age, this),
             _ => throw new ArgumentException("Invalid profession")
         };
         Citizens.Add(x);
@@ -108,10 +130,11 @@ public class Kingdom
         foreach (var c in citizens)
         {
             c.Tick(rand);
-            if (rand.NextDouble() < 0.1)
+            if (rand.NextDouble() < 0.1 && c.Age > 20)
             {
                 CreateCitizen(rand, true, rand.Next(1, 4));
             }
+            
         }
         
         
@@ -130,5 +153,6 @@ public class Kingdom
         Wellbeing = rand.NextDouble();
         WealthTax = rand.NextDouble();
         WellbeingSpend = rand.Next(50, 200);
+        Wellbeing = (1 - WealthTax) + rand.Next(-20, 20) * 0.01;
     }
 }

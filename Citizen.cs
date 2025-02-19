@@ -45,7 +45,7 @@ public class Citizen
             Die();
             return;
         }
-        Wealth += rand.Next(-20, 100);
+        Wealth += rand.Next(-20, 150);
         Kingdom.Wealth += Kingdom.WealthTax * Wealth;
         Wealth -= Kingdom.WealthTax * Wealth;
         

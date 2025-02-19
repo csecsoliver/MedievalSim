@@ -50,7 +50,7 @@ public class Game
 
         int[] citizenCount =
         [
-            random.Next(7, 20), random.Next(7, 20), random.Next(7, 20)
+            random.Next(7, 27), random.Next(7, 20), random.Next(7, 20)
         ]; // első a paraszt, második a kovács, harmadik a katona
         Kingdom kingdom = new Kingdom(kingdomName);
         kingdom.King = new King(kingName, 1000, random.Next(30, 70), kingdom);
@@ -177,12 +177,12 @@ public class Game
         if (Kingdoms[0].WealthTax < 0)
         {
             Console.WriteLine("Well, now you're giving out money (happiness soars)");
-            Thread.Sleep(500);
-            Console.Clear();
-            Console.WriteLine("No.. I lied, it's now set to zero");
             Thread.Sleep(1000);
+            
+            Console.WriteLine("No.. I lied, it's now set to zero");
         }
-
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();
         Kingdoms[0].Wellbeing = (1 - Kingdoms[0].WealthTax) + _random.Next(-20, 20) * 0.01;
     }
 
@@ -199,8 +199,9 @@ public class Game
         }
 
         Kingdoms[0].WellbeingSpend = input;
-        Kingdoms[0].Wellbeing = Kingdoms[0].Wellbeing * Kingdoms[0].WellbeingSpend / (pastSpend + 1) +
-                                _random.Next(-10, 10) * 0.01;
+        Kingdoms[0].Wellbeing = Kingdoms[0].Wellbeing * (Kingdoms[0].WellbeingSpend / (pastSpend + 1) +
+                                _random.Next(-10, 10) * 0.01);
+        Kingdoms[0].Wealth -= input;
     }
 
     public void ArmyState()
@@ -257,7 +258,7 @@ public class Game
     public void Population()
     {
         Console.Clear();
-        List<string> popmenu = ["Invest in blacksmithing", "Invest in farming"];
+        List<string> popmenu = ["Invest in blacksmithing", "Invest in farming", "List citizen"];
         int peasantNum = 0;
         int soldierNum = 0;
         int blacksmithNum = 0;
@@ -293,10 +294,24 @@ public class Game
                 case 2:
                     TrainPeasant();
                     break;
+                case 3:
+                    ListCitizen();
+                    break;
             }
         }
     }
 
+    public void ListCitizen()
+    {
+        Console.Clear();
+        foreach (Citizen c in Kingdoms[0].Citizens)
+        {
+            Console.WriteLine($"{c.Name}, Wealth: {c.Wealth}, Age: {c.Age}, Profession: {c.GetType().Name}");
+        }
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();
+        
+    }
     public void TrainBlacksmith()
     {
         Console.Clear();
@@ -366,12 +381,13 @@ public class Game
             double soldierAvgAge = 0;
             foreach (Citizen k in Kingdoms[0].Citizens)
             {
-                if (k.GetType() == typeof(Blacksmith))
+                if (k.GetType() == typeof(Blacksmith) && k.Age>20)
                 {
+                    
                     blacksmithNum++;
                     blacksmithAvgAge += k.Age;
                 }
-                else if (k.GetType() == typeof(Soldier))
+                else if (k.GetType() == typeof(Soldier) && k.Age>20)
                 {
                     soldierNum++;
                     soldierAvgAge += k.Age;
@@ -447,12 +463,12 @@ public class Game
             double soldierAvgAge = 0;
             foreach (Citizen c in k.Citizens)
             {
-                if (c.GetType() == typeof(Blacksmith))
+                if (c.GetType() == typeof(Blacksmith)&& c.Age>20)
                 {
                     blacksmithNum++;
                     blacksmithAvgAge += c.Age;
                 }
-                else if (c.GetType() == typeof(Soldier))
+                else if (c.GetType() == typeof(Soldier)&& c.Age>20)
                 {
                     soldierNum++;
                     soldierAvgAge += c.Age;
@@ -462,25 +478,29 @@ public class Game
             if (blacksmithNum == 0)
             {
                 blacksmithAvgAge = 0;
+                Console.WriteLine("No blacksmoths");
             }
             else
             {
                 blacksmithAvgAge /= blacksmithNum;
+                Console.WriteLine($"Blacksmiths: {blacksmithNum} Avg age: {blacksmithAvgAge}");
+                Thread.Sleep(100);
             }
 
             if (soldierNum == 0)
             {
                 soldierAvgAge = 0;
+                Console.WriteLine("No soldiers were found, kingdom defeated.");
             }
             else
             {
                 soldierAvgAge /= soldierNum;
+                Console.WriteLine($"Soldiers: {soldierNum} Avg age: {soldierAvgAge}");
+                Thread.Sleep(100);
             }
-
-            Console.WriteLine($"Blacksmiths: {blacksmithNum} Avg age: {blacksmithAvgAge}");
-            Thread.Sleep(100);
-            Console.WriteLine($"Soldiers: {soldierNum} Avg age: {soldierAvgAge}");
-            Thread.Sleep(100);
+            
+            
+            
             Console.WriteLine("Press any key to continue...");
             Console.ReadKey();
         }
@@ -506,12 +526,18 @@ public class Game
                 if (winner == Kingdoms[0])
                 {
                     Console.WriteLine("You won the war!");
-                    Thread.Sleep(1000);
+                    Kingdoms[0].Wealth += k.Wealth*0.3;
+                    k.Wealth -= k.Wealth*0.3;
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
                     return;
                 }
 
                 Console.WriteLine("You lost the war!");
-                Thread.Sleep(1000);
+                k.Wealth += Kingdoms[0].Wealth*0.3;
+                Kingdoms[0].Wealth -= Kingdoms[0].Wealth*0.3;
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
                 return;
             }
         }
@@ -524,7 +550,8 @@ public class Game
         if (input == Kingdoms[0].Name)
         {
             Console.WriteLine("You can't befriend yourself, you're not that lonely.");
-            Thread.Sleep(1000);
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
             return;
         }
         
@@ -533,7 +560,8 @@ public class Game
             if (k.Name == input)
             {
                 Console.WriteLine("You are now friends with " + k.Name);
-                Thread.Sleep(1000);
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
                 return;
             }
         }
